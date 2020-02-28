@@ -63,10 +63,23 @@ export function ExcelRenderer(file, callback) {
   }
 
   function make_cols(refstr) {
-    var o = [],
-      C = XLSX.utils.decode_range(refstr).e.c + 1;
-    for (var i = 0; i < C; ++i) {
-      o[i] = { name: XLSX.utils.encode_col(i), key: i };
-    }
-    return o;
-  }
+  	var o = [],
+    	C = XLSX.utils.decode_range(refstr).e.c + 1;
+  	for (var i = 0; i < C; ++i) {
+    		// Get ascii of first column - then add one
+    		if (i === 0) {
+      			var colRef = XLSX.utils.encode_col(i);
+      			var charCode = colRef.charCodeAt(0);
+      			o[i] = { name: "", key: i };
+      
+    		} else {
+      			o[i] = { name: colRef, key: i };
+      			charCode = charCode + 1;
+      			colRef = String.fromCharCode(charCode);      
+    		}
+  	}
+
+  	o[i] = { name: colRef, key: i };  
+
+  	return o;
+}
